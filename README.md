@@ -6,7 +6,7 @@ de Faria, E.R., Ponce de Leon Ferreira Carvalho, A.C. & Gama, J. MINAS: multicla
 
 ## Documentation
 
-The documentation of this project is avaiable in the following link:
+The documentation of this project is available in the following link:
 https://douglas444.github.io/minas-reference-implementation/
 
 ## Requirements
