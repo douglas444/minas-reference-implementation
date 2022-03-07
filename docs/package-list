@@ -1,0 +1,7 @@
+br.ufu.facom.minas.core
+br.ufu.facom.minas.core.clustering
+br.ufu.facom.minas.core.datastructure
+br.ufu.facom.minas.core.decisionrule
+br.ufu.facom.minas.core.decisionrule.datainstance
+br.ufu.facom.minas.core.decisionrule.microcluster
+br.ufu.facom.minas.example
