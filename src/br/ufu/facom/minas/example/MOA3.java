@@ -6,7 +6,7 @@ import br.ufu.facom.minas.core.MINASConfiguration;
 import br.ufu.facom.minas.core.MINASModel;
 import br.ufu.facom.minas.core.clustering.CluStream;
 import br.ufu.facom.minas.core.clustering.ClusteringAlgorithm;
-import br.ufu.facom.minas.core.clustering.KMeansPlusPlus;
+import br.ufu.facom.minas.core.clustering.KMeans;
 import br.ufu.facom.minas.core.datastructure.DataInstance;
 import br.ufu.facom.minas.core.datastructure.Labelling;
 import br.ufu.facom.minas.core.decisionrule.datainstance.DataInstanceDecisionRule;
@@ -17,7 +17,6 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Example of how to execute MINAS and how to print the results in external
@@ -32,7 +31,7 @@ public class MOA3 {
     public static final int TRAINING_DATA_SIZE = 10000;
     public static final int CLU_STREAM_INITIAL_DATA_SIZE = 1000;
     public static final int CLU_STREAM_BUFFER_MAX_SIZE = 100;
-    public static final int K_MEANS_PLUS_PLUS_K = 100;
+    public static final int K_MEANS_K = 100;
     public static final double DECISION_RULE_FACTOR = 2;
     public static final int TEMPORARY_MEMORY_MAX_SIZE = 2000;
     public static final int MINIMUM_CLUSTER_SIZE = 20;
@@ -47,8 +46,6 @@ public class MOA3 {
 
     public static void main(final String[] args) throws Exception {
 
-        final Random random = new Random(0);
-
         // Initializes a file reader for the dataset.
         final DatasetFileReader datasetFileReader = new DatasetFileReader(DATASET_COLUMN_SEPARATOR, DATASET);
 
@@ -56,10 +53,10 @@ public class MOA3 {
         final List<DataInstance> trainingInstances = datasetFileReader.getBatch(TRAINING_DATA_SIZE);
 
         // Configures the clustering algorithm for the offline phase.
-        final ClusteringAlgorithm clusteringForInitialization = new CluStream(CLU_STREAM_INITIAL_DATA_SIZE, CLU_STREAM_BUFFER_MAX_SIZE, random);
+        final ClusteringAlgorithm clusteringForInitialization = new CluStream(CLU_STREAM_INITIAL_DATA_SIZE, CLU_STREAM_BUFFER_MAX_SIZE);
 
         // Configures the clustering algorithm for the online phase.
-        final ClusteringAlgorithm clusteringForNoveltyDetection = new KMeansPlusPlus(K_MEANS_PLUS_PLUS_K, random);
+        final ClusteringAlgorithm clusteringForNoveltyDetection = new KMeans(K_MEANS_K);
 
         // Configures the decision rule for micro-cluster classification.
         final MicroClusterDecisionRule microClusterDecisionRule = new MicroClusterDecisionRule_4();

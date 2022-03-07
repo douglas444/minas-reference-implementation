@@ -6,13 +6,12 @@ import br.ufu.facom.minas.core.MINAS;
 import br.ufu.facom.minas.core.MINASConfiguration;
 import br.ufu.facom.minas.core.MINASModel;
 import br.ufu.facom.minas.core.clustering.CluStream;
-import br.ufu.facom.minas.core.clustering.KMeansPlusPlus;
+import br.ufu.facom.minas.core.clustering.KMeans;
 import br.ufu.facom.minas.core.datastructure.DataInstance;
 import br.ufu.facom.minas.core.decisionrule.datainstance.DataInstanceDecisionRule_1;
-import br.ufu.facom.minas.core.decisionrule.microcluster.MicroClusterDecisionRule_4;
+import br.ufu.facom.minas.core.decisionrule.microcluster.MicroClusterDecisionRule_1;
 
 import java.util.List;
-import java.util.Random;
 
 /**
  * This class can be used to apply MINAS to the SynEDC dataset. If you are
@@ -26,10 +25,11 @@ public class SynEDC {
     public static final String DATASET_COLUMN_SEPARATOR = ",";
     public static final String[] DATASET = new String[]{"./datasets/SynEDC_part1.csv", "./datasets/SynEDC_part2.csv"};
     public static final int TRAINING_DATA_SIZE = 40000;
-    public static final int CLU_STREAM_INITIAL_DATA_SIZE = 5000;
+    public static final int CLU_STREAM_INITIAL_DATA_SIZE = 1000;
     public static final int CLU_STREAM_BUFFER_MAX_SIZE = 100;
-    public static final int K_MEANS_PLUS_PLUS_K = 100;
-    public static final double DECISION_RULE_FACTOR = 2;
+    public static final int K_MEANS_K = 100;
+    public static final double MICRO_CLUSTER_DECISION_RULE_FACTOR = 1.1;
+    public static final double INSTANCE_DECISION_RULE_FACTOR = 2;
     public static final int TEMPORARY_MEMORY_MAX_SIZE = 2000;
     public static final int MINIMUM_CLUSTER_SIZE = 20;
     public static final int WINDOW_SIZE = 4000;
@@ -39,16 +39,14 @@ public class SynEDC {
 
     public static void main(final String[] args) throws Exception {
 
-        final Random random = new Random(0);
-
         final DatasetFileReader datasetFileReader = new DatasetFileReader(DATASET_COLUMN_SEPARATOR, DATASET);
         final List<DataInstance> trainingInstances = datasetFileReader.getBatch(TRAINING_DATA_SIZE);
 
         final MINASConfiguration config = new MINASConfiguration(
-                new CluStream(CLU_STREAM_INITIAL_DATA_SIZE, CLU_STREAM_BUFFER_MAX_SIZE, random),
-                new KMeansPlusPlus(K_MEANS_PLUS_PLUS_K, random),
-                new MicroClusterDecisionRule_4(),
-                new DataInstanceDecisionRule_1(DECISION_RULE_FACTOR),
+                new CluStream(CLU_STREAM_INITIAL_DATA_SIZE, CLU_STREAM_BUFFER_MAX_SIZE),
+                new KMeans(K_MEANS_K),
+                new MicroClusterDecisionRule_1(MICRO_CLUSTER_DECISION_RULE_FACTOR),
+                new DataInstanceDecisionRule_1(INSTANCE_DECISION_RULE_FACTOR),
                 TEMPORARY_MEMORY_MAX_SIZE,
                 MINIMUM_CLUSTER_SIZE,
                 WINDOW_SIZE,

@@ -5,7 +5,6 @@ import br.ufu.facom.minas.core.datastructure.MicroCluster;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Implementation of the {@link ClusteringAlgorithm} interface for the
@@ -18,10 +17,8 @@ public class CluStream implements ClusteringAlgorithm {
 
     private final int trainingDataSize;
     private final int bufferSize;
-    private final Random random;
 
-    public CluStream(final int trainingDataSize, final int bufferSize, final Random random) {
-        this.random = random;
+    public CluStream(final int trainingDataSize, final int bufferSize) {
         this.trainingDataSize = trainingDataSize;
         this.bufferSize = bufferSize;
     }
@@ -30,7 +27,7 @@ public class CluStream implements ClusteringAlgorithm {
     public List<MicroCluster> execute(final List<DataInstance> instances) {
 
         if (instances.size() <= this.trainingDataSize) {
-            return CluStream.buildBuffer(instances, Math.min(instances.size(), this.bufferSize), this.random);
+            return CluStream.buildBuffer(instances, Math.min(instances.size(), this.bufferSize));
         }
 
         final List<DataInstance> offlineData = new LinkedList<>(
@@ -40,7 +37,7 @@ public class CluStream implements ClusteringAlgorithm {
                 instances.subList(this.trainingDataSize, instances.size()));
 
         final List<MicroCluster> buffer = CluStream.buildBuffer(offlineData,
-                Math.min(instances.size(), this.bufferSize), this.random);
+                Math.min(instances.size(), this.bufferSize));
 
         for (final DataInstance instance : onlineData) {
             process(instance, buffer);
@@ -49,11 +46,9 @@ public class CluStream implements ClusteringAlgorithm {
         return buffer;
     }
 
-    private static List<MicroCluster> buildBuffer(final List<DataInstance> instances,
-                                                  final int bufferMaxSize,
-                                                  final Random random) {
+    private static List<MicroCluster> buildBuffer(final List<DataInstance> instances, final int bufferMaxSize) {
 
-        final KMeansPlusPlus kMeans = new KMeansPlusPlus(bufferMaxSize, random);
+        final KMeans kMeans = new KMeans(bufferMaxSize);
         return kMeans.execute(instances);
     }
 
