@@ -4,6 +4,11 @@ Reference implementation for the MINAS framework.
 
 de Faria, E.R., Ponce de Leon Ferreira Carvalho, A.C. & Gama, J. MINAS: multiclass learning algorithm for novelty detection in data streams. Data Min Knowl Disc 30, 640–680 (2016). https://doi.org/10.1007/s10618-015-0433-y
 
+## Documentation
+
+The documentation of this project is avaiable in the following link:
+https://douglas444.github.io/minas-reference-implementation/
+
 ## Requirements
 
 * Java 7 or higher.
