@@ -34,7 +34,7 @@ public class MINAS {
     public static MINASModel initializeModel(final List<DataInstance> trainingSet,
                                              final MINASConfiguration config) {
 
-        // Sort the instances list
+        // Sorts the instances by timestamp (ascending)
         Collections.sort(trainingSet, new Comparator<DataInstance>() {
             @Override
             public int compare(final DataInstance o1, final DataInstance o2) {
