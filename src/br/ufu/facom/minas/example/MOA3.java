@@ -98,7 +98,7 @@ public class MOA3 {
         // Loop for the online phase
         while (instance != null) {
 
-            // Executes MINAS' online processing algorithm for the instance
+            // Executes MINAS' online processing algorithm for the instance.
             final List<Labelling> results = MINAS.process(instance, model, config);
 
             // Stores the resultant predictions.
@@ -107,7 +107,7 @@ public class MOA3 {
             // Reads next instance.
             instance = datasetFileReader.getNext();
 
-            // Gathers MINAS' statistics at the current timestamp.
+            // Gets statistics at the current timestamp.
             final String output = model.getLastTimestamp()
                     + ";" + model.getNoveltyCount()
                     + ";" + model.getConfusionMatrix().measureUnkR()
@@ -120,7 +120,7 @@ public class MOA3 {
             System.out.println("Timestamp = " + model.getLastTimestamp());
         }
 
-        // Prints the file statistics in the console.
+        // Prints the final statistics in the console.
         System.out.println("Timestamp = " + model.getLastTimestamp()
                 + "; Novelty count = " + model.getNoveltyCount()
                 + "; UnkR = " + model.getConfusionMatrix().measureUnkR()
