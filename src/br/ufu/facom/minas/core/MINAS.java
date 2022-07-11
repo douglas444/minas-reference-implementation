@@ -51,13 +51,10 @@ public class MINAS {
 
         final List<MicroCluster> decisionModel = new LinkedList<>();
 
-        // Splits the instances in different lists, one for each known label.
-        // The clustering algorithm is applied to each one of the resulting
-        // lists. The resulting micro-clusters are added to the decision model
-        // if they meet the required criteria.
+        // For each label...
         for (final String label : knownLabels) {
 
-            // Builds one list for each label.
+            // Builds a list contaning only instance of the label.
             final List<DataInstance> instances = new LinkedList<>();
             for (final DataInstance dataInstance : trainingSet) {
                 if (label.equals(dataInstance.getLabel())) {
