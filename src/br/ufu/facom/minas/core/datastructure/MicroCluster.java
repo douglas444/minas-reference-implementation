@@ -155,7 +155,7 @@ public class MicroCluster {
 
         final Point centroid = microCluster.calculateCentroid();
 
-        final List<Point> centroids = new LinkedList<>();
+        final List<Point> centroids = new ArrayList<>();
         for (final MicroCluster cluster : microClusters) {
             centroids.add(cluster.calculateCentroid());
         }

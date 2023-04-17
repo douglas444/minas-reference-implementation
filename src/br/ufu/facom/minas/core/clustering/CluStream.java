@@ -3,7 +3,7 @@ package br.ufu.facom.minas.core.clustering;
 import br.ufu.facom.minas.core.datastructure.DataInstance;
 import br.ufu.facom.minas.core.datastructure.MicroCluster;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,10 +30,10 @@ public class CluStream implements ClusteringAlgorithm {
             return CluStream.buildBuffer(instances, Math.min(instances.size(), this.bufferSize));
         }
 
-        final List<DataInstance> offlineData = new LinkedList<>(
+        final List<DataInstance> offlineData = new ArrayList<>(
                 instances.subList(0, this.trainingDataSize));
 
-        final List<DataInstance> onlineData = new LinkedList<>(
+        final List<DataInstance> onlineData = new ArrayList<>(
                 instances.subList(this.trainingDataSize, instances.size()));
 
         final List<MicroCluster> buffer = CluStream.buildBuffer(offlineData,
@@ -64,7 +64,7 @@ public class CluStream implements ClusteringAlgorithm {
             radius = closestMicroCluster.calculateStandardDeviation() * 2;
         } else {
 
-            final List<MicroCluster> bufferSubSet = new LinkedList<>(buffer);
+            final List<MicroCluster> bufferSubSet = new ArrayList<>(buffer);
             bufferSubSet.remove(closestMicroCluster);
 
             radius = MicroCluster

@@ -49,13 +49,13 @@ public class MINAS {
             knownLabels.add(label);
         }
 
-        final List<MicroCluster> decisionModel = new LinkedList<>();
+        final List<MicroCluster> decisionModel = new ArrayList<>();
 
         // For each label...
         for (final String label : knownLabels) {
 
             // Builds a list contaning only instance of the label.
-            final List<DataInstance> instances = new LinkedList<>();
+            final List<DataInstance> instances = new ArrayList<>();
             for (final DataInstance dataInstance : trainingSet) {
                 if (label.equals(dataInstance.getLabel())) {
                     instances.add(dataInstance);
@@ -93,7 +93,7 @@ public class MINAS {
 
     /**
      * Tries to classify a single data instance, and if the result is
-     * successful, returns a list containing the labelling mapping the data
+     * successful, returns a list containing the labeling mapping the data
      * instance's timestamp to the predicted label. However, if the
      * classification fails, the data instance is added to the {@code model}'s
      * temporary memory and its classification is delayed. This method
@@ -102,7 +102,7 @@ public class MINAS {
      *
      * <p>If during the execution of this method the {@code model}'s temporary
      * memory reaches its maximum size, the novelty detection procedure is
-     * executed and when this happens, labellings for delayed classifications
+     * executed and when this happens, labelings for delayed classifications
      * may be added to the return list.
      *
      * @param instance the instance to be classified. Its label is expected to
@@ -112,14 +112,14 @@ public class MINAS {
      *                 {@link DataInstance#getLabel() getLabel} method.
      * @param model the model used to process the instance.
      * @param config the MINAS configuration to be used.
-     * @return a list that may include delayed classification labellings and/or
-     * the labelling for the instance passed as argument. The list will be empty
+     * @return a list that may include delayed classification labelings and/or
+     * the labeling for the instance passed as argument. The list will be empty
      * if the model fails at classifying the data instance and no pattern is
      * detected by the novelty detection procedure.
      */
-    public static List<Labelling> process(final DataInstance instance,
-                                          final MINASModel model,
-                                          final MINASConfiguration config) {
+    public static List<Labeling> process(final DataInstance instance,
+                                         final MINASModel model,
+                                         final MINASConfiguration config) {
 
         // Updates the model last seen timestamp.
         model.setLastTimestamp(instance.getTimestamp());
@@ -129,10 +129,10 @@ public class MINAS {
         final DataInstanceDecisionRule decisionRule = config.getDataInstanceDecisionRule();
         final Classification classification = decisionRule.classify(instance, model.getDecisionModel());
 
-        final List<Labelling> labellings = new LinkedList<>();
+        final List<Labeling> labelings = new ArrayList<>();
 
         // If one of the model's micro-clusters manages to explain the data
-        // instance, the referred micro-cluster is updated and a labelling
+        // instance, the referred micro-cluster is updated and a labeling
         // mapping the current timestamp to the micro-cluster's label is added
         // to the list that will be returned.
         if (classification.isExplained()) {
@@ -146,15 +146,15 @@ public class MINAS {
                 classification.getClosestMicroCluster().updateTimestamp(instance);
             }
 
-            final Labelling labelling = new Labelling(
+            final Labeling labeling = new Labeling(
                     instance.getTimestamp(),
                     classification.getClosestMicroCluster().getLabel(),
                     classification.getClosestMicroCluster().getCategory().equals(Category.NOVELTY));
 
             // Adds to the list that will be returned at the end of this method a
-            // labelling mapping the current timestamp to the micro-cluster's
+            // labeling mapping the current timestamp to the micro-cluster's
             // label.
-            labellings.add(labelling);
+            labelings.add(labeling);
 
         } else {
 
@@ -165,10 +165,10 @@ public class MINAS {
 
             // If the model's temporary memory has reached its max size, the
             // novelty detection procedure is called and any resultant delayed
-            // classifications labellings are added to the list that will be
+            // classifications labelings are added to the list that will be
             // returned.
             if (model.getTemporaryMemory().size() >= config.getTemporaryMemoryMaxSize()) {
-                labellings.addAll(detectNoveltyAndUpdate(model, config));
+                labelings.addAll(detectNoveltyAndUpdate(model, config));
             }
 
         }
@@ -180,7 +180,7 @@ public class MINAS {
         if (model.getLastTimestamp() % config.getWindowSize() == 0) {
 
             // Searches for inactive micro-clusters inside the decision model.
-            final List<MicroCluster> inactiveMicroClusters = new LinkedList<>();
+            final List<MicroCluster> inactiveMicroClusters = new ArrayList<>();
             for (final MicroCluster microCluster : model.getDecisionModel()) {
                 final long microClusterAge = model.getLastTimestamp() - microCluster.getTimestamp();
                 if (microClusterAge > config.getMicroClusterLifespan()) {
@@ -195,7 +195,7 @@ public class MINAS {
 
             // Searches for inactive data instances inside the temporary
             // memory.
-            final List<DataInstance> instancesToBeRemoved = new LinkedList<>();
+            final List<DataInstance> instancesToBeRemoved = new ArrayList<>();
             for (final DataInstance dataInstance : model.getTemporaryMemory()) {
                 final long instanceAge = model.getLastTimestamp() - dataInstance.getTimestamp();
                 if (instanceAge > config.getInstanceLifespan()) {
@@ -216,10 +216,10 @@ public class MINAS {
             model.getConfusionMatrix().addUnknown(instance);
         }
 
-        // Return the list of labellings. It may be empty if the data instance
+        // Return the list of labelings. It may be empty if the data instance
         // wasn't explained by the decision model and if no new micro-cluster
         // was generated by the novelty detection procedure.
-        return labellings;
+        return labelings;
 
     }
 
@@ -232,19 +232,19 @@ public class MINAS {
      * classified and added to the {@code model}'s decision model.
      *
      * <p>If one or more patterns are detected, this method will return a list
-     * containing the delayed classification labellings corresponding to the
+     * containing the delayed classification labelings corresponding to the
      * data instances composing those patterns. If no pattern is detected, an
      * empty list will be returned.
      *
      * @param model the model over which the novelty detection procedure will
      *              be applied.
      * @param config the MINAS configuration to be used.
-     * @return the list of delayed classification labellings of the instances
+     * @return the list of delayed classification labelings of the instances
      * composing the patterns detected. If no pattern is detected, an empty
      * list will be returned.
      */
-    private static List<Labelling> detectNoveltyAndUpdate(final MINASModel model,
-                                                          final MINASConfiguration config) {
+    private static List<Labeling> detectNoveltyAndUpdate(final MINASModel model,
+                                                         final MINASConfiguration config) {
 
         // Applies to the model's temporary memory the clustering algorithm
         // configured.
@@ -253,7 +253,7 @@ public class MINAS {
 
         // Searches for micro-clusters that do not meet the required criteria
         // to be declared as a pattern.
-        final List<MicroCluster> microClustersToBeRemoved = new LinkedList<>();
+        final List<MicroCluster> microClustersToBeRemoved = new ArrayList<>();
         for (final MicroCluster microCluster : microClusters) {
             final double silhouette = MicroCluster.calculateSilhouette(microCluster, model.getDecisionModel());
             if (microCluster.getN() < config.getMinimumClusterSize() || silhouette <= 0) {
@@ -265,15 +265,15 @@ public class MINAS {
         // to be declared as a pattern.
         microClusters.removeAll(microClustersToBeRemoved);
 
-        final List<Labelling> labellings = new LinkedList<>();
+        final List<Labeling> labelings = new ArrayList<>();
 
         // Tries to classify each micro-cluster, first using the decision
         // model, and if the decision model fails to explain the micro-cluster,
         // tries to classify it using the sleep memory. If the micro-cluster is
         // explained by the decision model or sleep memory, it is declared an
         // extension, otherwise, a novelty. Finally, the micro-cluster is added
-        // to the decision model and the respective instances are removed from
-        // the temporary memory.
+        // to the decision model and the respective data instances are removed
+        // from the temporary memory.
         for (final MicroCluster microCluster : microClusters) {
 
             // Classifies the micro-cluster using the configured decision rule
@@ -319,7 +319,7 @@ public class MINAS {
             model.getDecisionModel().add(microCluster);
 
             // Searches for the instances respective to micro-cluster.
-            final List<DataInstance> instances = new LinkedList<>();
+            final List<DataInstance> instances = new ArrayList<>();
             for (final DataInstance instance : model.getTemporaryMemory()) {
                 if (microCluster.getTimestamps().contains(instance.getTimestamp())) {
                     instances.add(instance);
@@ -331,7 +331,7 @@ public class MINAS {
             model.getTemporaryMemory().removeAll(instances);
 
             // For each of the instances respective to the micro-cluster, adds
-            // to the return list a labelling mapping the instance's timestamp
+            // to the return list a labeling mapping the instance's timestamp
             // to the micro-cluster label.
             for (final DataInstance instance : instances) {
 
@@ -340,15 +340,15 @@ public class MINAS {
                 // Updates the confusion matrix.
                 model.getConfusionMatrix().updatedDelayed(instance, microCluster.getLabel(), isNovel);
 
-                final Labelling labelling = new Labelling(
+                final Labeling labeling = new Labeling(
                         instance.getTimestamp(),
                         microCluster.getLabel(),
                         microCluster.getCategory().equals(Category.NOVELTY));
 
-                labellings.add(labelling);
+                labelings.add(labeling);
             }
         }
 
-        return labellings;
+        return labelings;
     }
 }

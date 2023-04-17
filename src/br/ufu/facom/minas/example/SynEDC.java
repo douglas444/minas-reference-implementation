@@ -23,7 +23,11 @@ import java.util.List;
 public class SynEDC {
 
     public static final String DATASET_COLUMN_SEPARATOR = ",";
-    public static final String[] DATASET = new String[]{"./datasets/SynEDC_part1.csv", "./datasets/SynEDC_part2.csv"};
+    public static final String[] DATASET = new String[]{
+            "./datasets/SynEDC-1.csv",
+            "./datasets/SynEDC-2.csv",
+            "./datasets/SynEDC-3.csv"
+    };
     public static final int TRAINING_DATA_SIZE = 40000;
     public static final int CLU_STREAM_INITIAL_DATA_SIZE = 1000;
     public static final int CLU_STREAM_BUFFER_MAX_SIZE = 100;

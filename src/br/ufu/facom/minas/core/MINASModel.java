@@ -4,7 +4,7 @@ import br.ufu.facom.minas.core.datastructure.DataInstance;
 import br.ufu.facom.minas.core.datastructure.DynamicConfusionMatrix;
 import br.ufu.facom.minas.core.datastructure.MicroCluster;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MINASModel {
@@ -20,8 +20,8 @@ public class MINASModel {
         this.confusionMatrix = confusionMatrix;
         this.decisionModel = modelMicroClusters;
         this.noveltyCount = 0;
-        this.sleepMemory = new LinkedList<>();
-        this.temporaryMemory = new LinkedList<>();
+        this.sleepMemory = new ArrayList<>();
+        this.temporaryMemory = new ArrayList<>();
     }
 
     public long getLastTimestamp() {

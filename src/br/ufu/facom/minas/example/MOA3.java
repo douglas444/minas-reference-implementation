@@ -8,14 +8,14 @@ import br.ufu.facom.minas.core.clustering.CluStream;
 import br.ufu.facom.minas.core.clustering.ClusteringAlgorithm;
 import br.ufu.facom.minas.core.clustering.KMeans;
 import br.ufu.facom.minas.core.datastructure.DataInstance;
-import br.ufu.facom.minas.core.datastructure.Labelling;
+import br.ufu.facom.minas.core.datastructure.Labeling;
 import br.ufu.facom.minas.core.decisionrule.datainstance.DataInstanceDecisionRule;
 import br.ufu.facom.minas.core.decisionrule.datainstance.DataInstanceDecisionRule_1;
 import br.ufu.facom.minas.core.decisionrule.microcluster.*;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -90,7 +90,7 @@ public class MOA3 {
         statisticsBw.write("timestamp;novelty_count;unkr;cer\n");
 
         // This list is where the predictions will be stored.
-        final List<Labelling> labellings = new LinkedList<>();
+        final List<Labeling> labelings = new ArrayList<>();
 
         // Reads the first instance for the online phase
         DataInstance instance = datasetFileReader.getNext();
@@ -99,10 +99,10 @@ public class MOA3 {
         while (instance != null) {
 
             // Executes MINAS' online processing algorithm for the instance.
-            final List<Labelling> results = MINAS.process(instance, model, config);
+            final List<Labeling> results = MINAS.process(instance, model, config);
 
             // Stores the resultant predictions.
-            labellings.addAll(results);
+            labelings.addAll(results);
 
             // Reads next instance.
             instance = datasetFileReader.getNext();
@@ -133,16 +133,16 @@ public class MOA3 {
         // Create an array where the predictions are stored ordered by the
         // respective timestamp.
         final String[] labels = new String[(int) model.getLastTimestamp()];
-        for (final Labelling labelling : labellings) {
-            labels[(int) labelling.getTimestamp() - 1] = labelling.getLabel();
+        for (final Labeling labeling : labelings) {
+            labels[(int) labeling.getTimestamp() - 1] = labeling.getLabel();
         }
 
         // Open the file where the predictions will be printed.
-        final FileWriter labellingsWriter = new FileWriter(OUTPUT_FILE_PREDICTIONS);
-        final BufferedWriter labellingsBw = new BufferedWriter(labellingsWriter);
+        final FileWriter labelingsWriter = new FileWriter(OUTPUT_FILE_PREDICTIONS);
+        final BufferedWriter labelingsBw = new BufferedWriter(labelingsWriter);
 
         // Writes the header of the predictions file
-        labellingsBw.write("timestamp;label\n");
+        labelingsBw.write("timestamp;label\n");
 
         // For each timestamp
         for (int i = 0; i < model.getLastTimestamp(); ++i) {
@@ -152,11 +152,11 @@ public class MOA3 {
             final String label = labels[i] != null ? labels[i] : "";
 
             // Writes the timestamp and the label to the file;
-            labellingsBw.write((i + 1) + ";" + label + "\n");
+            labelingsBw.write((i + 1) + ";" + label + "\n");
         }
 
         // Closes the predictions file.
-        labellingsBw.close();
+        labelingsBw.close();
 
         // Writes the final confusion matrix to a file.
         final FileWriter finalConfusionMatrixWriter = new FileWriter(OUTPUT_FILE_FINAL_CONFUSION_MATRIX);

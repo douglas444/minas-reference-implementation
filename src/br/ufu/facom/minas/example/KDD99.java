@@ -22,7 +22,7 @@ import java.util.List;
 public class KDD99 {
 
     public static final String DATASET_COLUMN_SEPARATOR = ",";
-    public static final String[] DATASET = new String[]{"./datasets/KDD99.csv"};
+    public static final String[] DATASET = new String[]{"./datasets/kdd99.csv"};
     public static final int TRAINING_DATA_SIZE = 48993;
     public static final int CLU_STREAM_INITIAL_DATA_SIZE = 5000;
     public static final int CLU_STREAM_BUFFER_MAX_SIZE = 100;

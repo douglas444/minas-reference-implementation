@@ -4,7 +4,7 @@ import br.ufu.facom.minas.core.decisionrule.Classification;
 import br.ufu.facom.minas.core.datastructure.Category;
 import br.ufu.facom.minas.core.datastructure.MicroCluster;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,7 +32,7 @@ public class MicroClusterDecisionRule_2 implements MicroClusterDecisionRule {
 
         final MicroCluster closestMicroCluster = target.calculateClosestMicroCluster(microClusters);
 
-        final List<MicroCluster> sameLabelAsClosest = new LinkedList<>();
+        final List<MicroCluster> sameLabelAsClosest = new ArrayList<>();
         for (final MicroCluster microCluster : microClusters) {
 
             final Category category = microCluster.getCategory();

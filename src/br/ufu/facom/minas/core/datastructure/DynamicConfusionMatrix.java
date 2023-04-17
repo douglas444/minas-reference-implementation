@@ -3,7 +3,7 @@ package br.ufu.facom.minas.core.datastructure;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -37,9 +37,9 @@ public class DynamicConfusionMatrix {
 
     public DynamicConfusionMatrix(final Set<String> knownLabels) {
 
-        this.rowLabels = new LinkedList<>();
-        this.knownColumnLabels = new LinkedList<>();
-        this.noveltyColumnLabels = new LinkedList<>();
+        this.rowLabels = new ArrayList<>();
+        this.knownColumnLabels = new ArrayList<>();
+        this.noveltyColumnLabels = new ArrayList<>();
 
         this.knownColumnsCount = 0;
         this.noveltyColumnsCount = 0;
@@ -48,9 +48,9 @@ public class DynamicConfusionMatrix {
         this.noveltyColumnIndexByLabel = new HashMap<>();
         this.rowIndexByLabel = new HashMap<>();
 
-        this.knownColumnsMatrix = new LinkedList<>();
-        this.noveltyColumnsMatrix = new LinkedList<>();
-        this.unknownColumn = new LinkedList<>();
+        this.knownColumnsMatrix = new ArrayList<>();
+        this.noveltyColumnsMatrix = new ArrayList<>();
+        this.unknownColumn = new ArrayList<>();
 
         for (final String knownLabel : knownLabels) {
             addLabel(knownLabel);
@@ -168,7 +168,7 @@ public class DynamicConfusionMatrix {
     @Override
     public String toString() {
 
-        final List<String> sortedKnownColumnLabels = new LinkedList<>(this.knownColumnLabels);
+        final List<String> sortedKnownColumnLabels = new ArrayList<>(this.knownColumnLabels);
         Collections.sort(sortedKnownColumnLabels, new Comparator<String>() {
             @Override
             public int compare(final String o1, final String o2) {
@@ -248,8 +248,8 @@ public class DynamicConfusionMatrix {
     private void addRow(final String label) {
         this.rowIndexByLabel.put(label, this.rowLabels.size());
         this.rowLabels.add(label);
-        this.knownColumnsMatrix.add(new LinkedList<>(Collections.nCopies(knownColumnsCount, 0)));
-        this.noveltyColumnsMatrix.add(new LinkedList<>(Collections.nCopies(noveltyColumnsCount, 0)));
+        this.knownColumnsMatrix.add(new ArrayList<>(Collections.nCopies(knownColumnsCount, 0)));
+        this.noveltyColumnsMatrix.add(new ArrayList<>(Collections.nCopies(noveltyColumnsCount, 0)));
         this.unknownColumn.add(0);
 
     }
@@ -293,7 +293,7 @@ public class DynamicConfusionMatrix {
                 if ((novelties = noveltyAssociationByRow.get(label)) != null) {
                     novelties.add(noveltyColumnLabel);
                 } else {
-                    novelties = new LinkedList<>();
+                    novelties = new ArrayList<>();
                     novelties.add(noveltyColumnLabel);
                     noveltyAssociationByRow.put(label, novelties);
                 }

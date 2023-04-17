@@ -93,7 +93,7 @@ public class KMeans implements ClusteringAlgorithm {
         final ArrayList<List<DataInstance>> centroidsInstances = new ArrayList<>(centroids.size());
 
         for (int i = 0; i < centroids.size(); ++i) {
-            centroidsInstances.add(i, new LinkedList<DataInstance>());
+            centroidsInstances.add(i, new ArrayList<DataInstance>());
         }
 
         for (final DataInstance instance : instances) {
